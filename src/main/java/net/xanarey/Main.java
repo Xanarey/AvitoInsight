@@ -16,11 +16,11 @@ public class Main {
 
 
         // TODO Ссылки "склеиваем" самостоятельно
-        // https://www.avito.ru/moskva_i_mo?cd=1&p=1&q=apple+macbook+air+13+2020+intel
-        // https://www.avito.ru/moskva_i_mo?cd=1&p=2&q=apple+macbook+air+13+2020+intel
+        // https://www.avito.ru/moskva_i_mo/noutbuki?cd=1&p=1&q=%D0%BD%D0%BE%D1%83%D1%82%D0%B1%D1%83%D0%BA+apple+macbook+air+15+m2+2023
+        // https://www.avito.ru/moskva_i_mo/noutbuki?cd=1&p=2&q=%D0%BD%D0%BE%D1%83%D1%82%D0%B1%D1%83%D0%BA+apple+macbook+air+15+m2+2023
 
-        String startUrl = "https://www.avito.ru/moskva_i_mo?cd=1&p=";
-        String finishUrl = "&q=apple+macbook+air+13+2020+intel";
+        String startUrl = "https://www.avito.ru/moskva_i_mo/noutbuki?cd=1&p=";
+        String finishUrl = "&q=%D0%BD%D0%BE%D1%83%D1%82%D0%B1%D1%83%D0%BA+apple+macbook+air+15+m2+2023";
         int currentPage = 1;
 
         Document doc = Jsoup.connect(startUrl + currentPage + finishUrl)
@@ -71,7 +71,8 @@ public class Main {
 
                     try {
                         int count = Integer.parseInt(priceString);
-                        if (!(count < 40000 || count > 90000)) prices.add(count); // TODO Убираем доп. товары
+//                        if (!(count < 40000 || count > 90000)) prices.add(count); // TODO Убираем доп. товары
+                        prices.add(count);
                     } catch (NumberFormatException ex) {
                         System.out.println("Не удалось преобразовать цену в число: " + priceString);
                     }
@@ -95,7 +96,7 @@ public class Main {
     private static void calculate(List<Integer> prices, int intValueOnFirstPage, int pageCount, Document doc) {
         System.out.println("\nСредняя цена: " + calculateAverage(prices));
         System.out.println("Исключено из подсчёта: " + (intValueOnFirstPage - prices.size()));
-        System.out.println(intValueOnFirstPage + " позиций по выбранным условиям на " + (pageCount - 1) + " странице(ах)");
+        System.out.println(intValueOnFirstPage + " позиций по выбранным условиям на " + (pageCount) + " странице(ах)");
         System.out.println("\nПоиск осуществлен по запросу и выбранным областям: \n" + Objects.requireNonNull(doc.select("title").first()).text());
         System.out.println("Отобрано: " + prices.size());
         System.out.println("Самый дорогой - " + prices.stream().max(Integer::compareTo).orElse(null));
