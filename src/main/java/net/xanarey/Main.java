@@ -14,10 +14,16 @@ public class Main {
 
     public static void main(String[] args) throws IOException, InterruptedException {
 
-        String startUrl = "https://www.avito.ru/moskva_i_mo/telefony/mobilnye_telefony/apple/iphone_11-ASgBAgICA0SywA2kmzm0wA3OqzmwwQ2I_Dc?cd=1";
+
+        // TODO Ссылки "склеиваем" самостоятельно
+        // https://www.avito.ru/moskva_i_mo?cd=1&p=1&q=apple+macbook+air+13+2020+intel
+        // https://www.avito.ru/moskva_i_mo?cd=1&p=2&q=apple+macbook+air+13+2020+intel
+
+        String startUrl = "https://www.avito.ru/moskva_i_mo?cd=1&p=";
+        String finishUrl = "&q=apple+macbook+air+13+2020+intel";
         int currentPage = 1;
 
-        Document doc = Jsoup.connect(startUrl + "&p=" + currentPage)
+        Document doc = Jsoup.connect(startUrl + currentPage + finishUrl)
                 .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3")
                 .get();
 
@@ -31,9 +37,8 @@ public class Main {
         List<Integer> prices = new ArrayList<>();
 
         try {
-            int retryCount = 0;
             while (currentCount < intValueOnFirstPage) {
-                String url = startUrl + "&p=" + currentPage;
+                String url = startUrl + currentPage + finishUrl;
 
                 System.out.println("\n --------------------- Страница: [" + pageCount + "]  " + url);
 
@@ -61,12 +66,12 @@ public class Main {
                         continue;
                     }
 
-                    String currency = e.selectFirst("meta[itemProp=priceCurrency]").attr("content");
-                    String priceString = e.selectFirst("meta[itemProp=price]").attr("content");
+                    String currency = Objects.requireNonNull(e.selectFirst("meta[itemProp=priceCurrency]")).attr("content");
+                    String priceString = Objects.requireNonNull(e.selectFirst("meta[itemProp=price]")).attr("content");
 
                     try {
                         int count = Integer.parseInt(priceString);
-                        prices.add(count);
+                        if (!(count < 40000 || count > 90000)) prices.add(count); // TODO Убираем доп. товары
                     } catch (NumberFormatException ex) {
                         System.out.println("Не удалось преобразовать цену в число: " + priceString);
                     }
