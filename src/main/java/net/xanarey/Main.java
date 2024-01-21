@@ -16,11 +16,11 @@ public class Main {
 
 
         // TODO Ссылки "склеиваем" самостоятельно
-        // https://www.avito.ru/moskva_i_mo/noutbuki?cd=1&p=1&q=%D0%BD%D0%BE%D1%83%D1%82%D0%B1%D1%83%D0%BA+apple+macbook+air+15+m2+2023
-        // https://www.avito.ru/moskva_i_mo/noutbuki?cd=1&p=2&q=%D0%BD%D0%BE%D1%83%D1%82%D0%B1%D1%83%D0%BA+apple+macbook+air+15+m2+2023
+        // https://www.avito.ru/moskva_i_mo?p=1&q=xiaomi+mi+12
+        // https://www.avito.ru/moskva_i_mo?p=2&q=xiaomi+mi+12
 
-        String startUrl = "https://www.avito.ru/moskva_i_mo/noutbuki?cd=1&p=";
-        String finishUrl = "&q=%D0%BD%D0%BE%D1%83%D1%82%D0%B1%D1%83%D0%BA+apple+macbook+air+15+m2+2023";
+        String startUrl = "https://www.avito.ru/moskva_i_mo?p=";
+        String finishUrl = "&q=xiaomi+mi+12";
         int currentPage = 1;
 
         Document doc = Jsoup.connect(startUrl + currentPage + finishUrl)
@@ -71,8 +71,8 @@ public class Main {
 
                     try {
                         int count = Integer.parseInt(priceString);
-//                        if (!(count < 40000 || count > 90000)) prices.add(count); // TODO Убираем доп. товары
-                        prices.add(count);
+                        if (!(count < 25000 || count > 45000)) prices.add(count); // TODO Убираем доп. товары
+//                        prices.add(count);
                     } catch (NumberFormatException ex) {
                         System.out.println("Не удалось преобразовать цену в число: " + priceString);
                     }
